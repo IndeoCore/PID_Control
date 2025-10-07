@@ -1,11 +1,14 @@
 import random as rd
-import logica_controle as pf
+import regulador.logica_controle_regulador as pf
 
 LIMITES_GANHOS = {
-    "kp":[0.0, 20.0],
-    "ki":[0.0, 20.0],
-    "kd":[0.0, 10.0]
+    "kp":[0.0, 50.0],
+    "ki":[0.0, 50.0],
+    "kd":[0.0, 25.0]
 }
+
+MAX_GERACOES = 500
+GERACOES_ESPERA = 20
 
 def cria_populacao_inicial(tamanho_populacao):
     populacao = []
@@ -16,7 +19,7 @@ def cria_populacao_inicial(tamanho_populacao):
         populacao.append([kp, ki, kd])
     return populacao
 
-def selecao_por_torneio(populacao, fitnesses, k=3):
+def selecao_por_torneio(populacao, fitnesses, k=5):
     indices_torneio = rd.choices(range(len(populacao)), k=k)
     fitness_participantes = [fitnesses[i] for i in indices_torneio]
     indice_vencedor_local = fitness_participantes.index(max(fitness_participantes))
@@ -55,17 +58,14 @@ def mutacao(individuo, taxa_mutacao=0.1):
         
     return individuo_mutado
 
-def algoritmo_genetico(planta, pesos, populacao_inicial):
-    MAX_GERACOES = 500
-    GERACOES_ESPERA = 20
-
+def algoritmo_genetico(planta, pesos, populacao_inicial, tempo, setpoint):
     melhor_fitness = -1.0
     geracoes_sem_melhora = 0
     melhor_individuo = None
     populacao_atual = populacao_inicial
 
     for geracao in range(MAX_GERACOES):
-        fitnesses = [pf.calcula_fitness(pf.calcula_performance(planta, *ind), pesos) for ind in populacao_atual]
+        fitnesses = [pf.calcula_fitness(pf.calcula_performance(planta, *ind, tempo, setpoint), pesos, tempo) for ind in populacao_atual]
 
         melhor_fitness_geracao = max(fitnesses)
         indice_melhor_da_geracao = fitnesses.index(melhor_fitness_geracao)

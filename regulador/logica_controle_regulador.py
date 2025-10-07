@@ -22,10 +22,16 @@ def calcula_performance(planta, k_p, k_i, k_d, sim_time = 10, setpoint = 1.0):
         controle = cria_funcao_do_controlador(k_p, k_i, k_d)
         malha_aberta = planta * controle
         sistema_final = ct.feedback(malha_aberta, 1)
+        
+        polos = ct.poles(sistema_final)
+
+        if any(p.real >= 0 for p in polos):
+            return float('inf'), float('inf'), float('inf'), float('inf')
 
         # Simulação
         tempo = np.linspace(0, sim_time, sim_time*100 + 1)
-        tempo, resposta = ct.step_response(sistema_final, T = tempo)
+        tempo, resposta_nao_escalada = ct.step_response(sistema_final, T = tempo)
+        resposta = resposta_nao_escalada * setpoint
 
         # Valor de y_inf 
         valor_final = resposta[-1] 
@@ -120,13 +126,13 @@ def determina_pesos():
     pesos = np.array([float(x) for x in P.split()])
     return pesos
 
-
-def plot_system(planta, melhor_individuo):
+def plot_system(planta, melhor_individuo, sim_time_input = 10, setpoint = 1.0):
     kp, ki, kd = melhor_individuo
     controlador = cria_funcao_do_controlador(kp, ki, kd)
     sistema_malha_fechada = ct.feedback(planta * controlador, 1)
-    tempo = np.linspace(0, 10, 1001)
-    tempo, resposta = ct.step_response(sistema_malha_fechada, T = tempo)
+    tempo = np.linspace(0, sim_time_input, sim_time_input*100 + 1)
+    tempo, resposta_sem_escala = ct.step_response(sistema_malha_fechada, T = tempo)
+    resposta = resposta_sem_escala * setpoint
     fig, ax = plt.subplots(figsize=(12, 7))
     parametros = calcula_performance(planta, kp, ki, kd)
     print(f"\nSobressinal: {100*parametros[0]:.4f}%")
@@ -138,9 +144,9 @@ def plot_system(planta, melhor_individuo):
     ax.set_xlabel("Tempo (s)", fontsize=12)
     ax.set_ylabel("Posição", fontsize=12)
     ax.grid(True, which="both", linestyle=":", linewidth=0.7)
-    ax.axhline(y = 1, color='r', linestyle='-.', label="Setpoint 1.0")
-    ax.axhline(y = 1.02, color ='gray', linestyle ='--', label="Faixa de desvio de 2%")
-    ax.axhline(y = 0.98, color ='gray', linestyle ='--')
+    ax.axhline(y = setpoint, color='r', linestyle='-.', label=f"Setpoint: {setpoint:.1f}")
+    ax.axhline(y = 5.10, color ='gray', linestyle ='--', label="Faixa de desvio de 2%")
+    ax.axhline(y = 4.90, color ='gray', linestyle ='--')
     ax.legend()
     plt.show()
 
