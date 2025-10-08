@@ -1,6 +1,6 @@
 # Como usar?
 
-Executar o arquivo _"otimimzador.py"_. Ao iniciá-lo, ele irá pedir na seguinte ordem:
+Executar o arquivo _"otimizador.py"_. Ao iniciá-lo, ele irá pedir na seguinte ordem:
 
 - Qual tipo de otimização você quer realizar. É em relação ao degrau unitário, ou é m _reference tracker_. Responda com:
   - D - resposta ao degrau
