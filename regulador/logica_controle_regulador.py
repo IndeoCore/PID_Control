@@ -145,8 +145,8 @@ def plot_system(planta, melhor_individuo, sim_time_input = 10, setpoint = 1.0):
     ax.set_ylabel("Posição", fontsize=12)
     ax.grid(True, which="both", linestyle=":", linewidth=0.7)
     ax.axhline(y = setpoint, color='r', linestyle='-.', label=f"Setpoint: {setpoint:.1f}")
-    ax.axhline(y = 5.10, color ='gray', linestyle ='--', label="Faixa de desvio de 2%")
-    ax.axhline(y = 4.90, color ='gray', linestyle ='--')
+    ax.axhline(y = setpoint*(1.02), color ='gray', linestyle ='--', label="Faixa de desvio de 2%")
+    ax.axhline(y = setpoint*(0.98), color ='gray', linestyle ='--')
     ax.legend()
     plt.show()
 

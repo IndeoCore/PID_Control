@@ -3,14 +3,14 @@ from regulador.gen_alg_regulador import cria_populacao_inicial, algoritmo_geneti
 
 def regulador_main():
     print("--- Otimizador de ganhos PID com Algoritmo Genético ---")
-
+    print("--- Função de transferência ---")
     planta = cria_funcao_da_planta()
 
     pesos = determina_pesos()
 
-    sim_time_input = int(input("Quantos segundos de simulação você deseja (recomendado -> 10)? "))
+    sim_time_input = int(input("\nQuantos segundos de simulação você deseja (recomendado -> 10)?\n"))
 
-    tamanho_populacao = int(input("\nQual é o tamanho de população que deseja para a otimização? (recomendado = 100)\n"))
+    tamanho_populacao = int(input("Qual é o tamanho de população que deseja para a otimização? (recomendado = 100)\n"))
     populacao_inicial = cria_populacao_inicial(tamanho_populacao)
 
     setpoint = int(input("Qual a amplitude do degrau que deseja ser testado?\n"))

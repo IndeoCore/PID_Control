@@ -4,21 +4,21 @@ import numpy as np
 
 def rastreador_main():
     print("--- Otimizador de ganhos PID com Algoritmo Genético ---")
-
+    print("--- Função de transferência ---")
     planta = cria_funcao_da_planta()
 
     pesos = determina_pesos()
 
-    sim_time_input = int(input("Quantos segundos de simulação você deseja (recomendado -> 20)? "))
+    sim_time_input = int(input("Quantos segundos de simulação você deseja (recomendado -> 20)?\n"))
     tempo = np.linspace(0, sim_time_input, sim_time_input*100 + 1)
 
-    tamanho_populacao = int(input("\nQual é o tamanho de população que deseja para a otimização? (recomendado = 100)\n"))
+    tamanho_populacao = int(input("Qual é o tamanho de população que deseja para a otimização? (recomendado = 100)\n"))
     populacao_inicial = cria_populacao_inicial(tamanho_populacao)
     
+    print("\n--- Função de referência ---")
     func_referencia = cria_funcao_de_referencia_flexivel(tempo)
 
-
-    print("\nIniciando o processo de otimização")
+    print("\n--- Iniciando o processo de otimização ---")
 
     melhor_individuo = algoritmo_genetico(planta, func_referencia, pesos, populacao_inicial, sim_time_input)
 
